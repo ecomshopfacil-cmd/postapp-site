@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autorização — PostAPP</title>
+  <style>
+    body { font-family: -apple-system, Arial, sans-serif; background:#0a0a14; color:#eee; max-width:640px; margin:0 auto; padding:60px 20px; line-height:1.6; text-align:center; }
+    h1 { color:#25f4ee; }
+    .code-box { background:#15151f; border:1px solid #fe2c55; border-radius:12px; padding:20px; margin:24px 0; font-size:1.1em; word-break:break-all; }
+    .label { color:#888; font-size:0.85em; display:block; margin-bottom:6px; }
+    code { color:#25f4ee; }
+    button { background:#fe2c55; color:#fff; border:none; padding:12px 24px; border-radius:8px; font-size:1em; cursor:pointer; }
+    .err { color:#fe2c55; }
+  </style>
+</head>
+<body>
+  <h1>✅ Autorização recebida</h1>
+  <p>Copie o código abaixo e cole no terminal onde o script <code>auth.py</code> está rodando.</p>
+
+  <div class="code-box">
+    <span class="label">CÓDIGO DE AUTORIZAÇÃO</span>
+    <span id="code">—</span>
+  </div>
+  <button onclick="copyCode()">Copiar código</button>
+  <p id="state" class="label"></p>
+  <p id="error" class="err"></p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+    const error = params.get('error');
+    if (code) {
+      document.getElementById('code').textContent = code;
+      if (state) document.getElementById('state').textContent = 'state: ' + state;
+    } else {
+      document.getElementById('code').textContent = '(nenhum código)';
+      document.getElementById('error').textContent = error
+        ? ('Erro retornado: ' + error)
+        : 'Nenhum código encontrado na URL.';
+    }
+    function copyCode() {
+      navigator.clipboard.writeText(code || '').then(() => {
+        const b = document.querySelector('button');
+        b.textContent = 'Copiado!';
+        setTimeout(() => b.textContent = 'Copiar código', 1500);
+      });
+    }
+  </script>
+</body>
+</html>
